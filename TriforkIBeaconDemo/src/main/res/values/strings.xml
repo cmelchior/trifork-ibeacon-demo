@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Trifork iBeacon Demo</string>
+    <string name="title_beacondata">iBeacon data</string>
+    <string name="title_detector">Range</string>
+    <string name="title_log">Log</string>
+    <string name="action_clearlog">Clear log</string>
+    <string name="action_settings">About</string>
+    <string name="empty_placeholder">-</string>
+    <string name="title_scan">Scan</string>
+    <string name="label_major">Major: %s</string>
+    <string name="label_minor">Minor: %s</string>
+    <string name="label_rssi">RSSI: %s dBm</string>
+    <string name="label_txpower">TxPower: %s dBm</string>
+</resources>

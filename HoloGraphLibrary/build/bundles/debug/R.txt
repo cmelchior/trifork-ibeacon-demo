@@ -1,0 +1,24 @@
+int attr barAxisColor 0x7f010000
+int attr innerCircleRatio 0x7f010007
+int attr lineAxisColor 0x7f010003
+int attr orientation 0x7f010001
+int attr slicePadding 0x7f010008
+int attr strokeColor 0x7f010002
+int attr strokeSpacing 0x7f010005
+int attr strokeWidth 0x7f010004
+int attr useDip 0x7f010006
+int drawable popup_black 0x7f020000
+int id horizontal 0x7f030000
+int id vertical 0x7f030001
+int[] styleable BarGraph { 0x7f010000, 0x7f010001 }
+int styleable BarGraph_barAxisColor 0
+int styleable BarGraph_orientation 1
+int[] styleable LineGraph { 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006 }
+int styleable LineGraph_lineAxisColor 1
+int styleable LineGraph_strokeColor 0
+int styleable LineGraph_strokeSpacing 3
+int styleable LineGraph_strokeWidth 2
+int styleable LineGraph_useDip 4
+int[] styleable PieGraph { 0x7f010007, 0x7f010008 }
+int styleable PieGraph_innerCircleRatio 0
+int styleable PieGraph_slicePadding 1

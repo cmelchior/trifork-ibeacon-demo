@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:graph="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <TextView
+                style="@style/BeaconLabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UUID:"
+                android:id="@+id/uuid"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+
+        <TextView
+                style="@style/BeaconValueSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medium Text"
+                android:id="@+id/value_uuid"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/uuid"/>
+
+        <TextView
+                style="@style/BeaconLabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Major:"
+                android:id="@+id/label_major"
+                android:layout_below="@+id/uuid"
+                android:layout_alignParentStart="true"/>
+
+        <TextView
+                style="@style/BeaconValueSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:id="@+id/value_major"
+                android:layout_alignTop="@+id/label_major"
+                android:layout_toRightOf="@+id/label_major"/>
+
+        <TextView
+                style="@style/BeaconLabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minor:"
+                android:id="@+id/label_minor"
+                android:layout_below="@+id/value_uuid"
+                android:layout_toRightOf="@+id/value_major"/>
+
+        <TextView
+                style="@style/BeaconValueSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:id="@+id/value_minor"
+                android:layout_below="@+id/uuid"
+                android:layout_toRightOf="@+id/label_minor"/>
+
+        <TextView
+                style="@style/BeaconLabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TxPower:"
+                android:id="@+id/label_txpower"
+                android:layout_alignTop="@+id/value_minor"
+                android:layout_toRightOf="@+id/value_minor"/>
+
+        <TextView
+                style="@style/BeaconValueSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-10 dBm"
+                android:id="@+id/value_txpower"
+                android:layout_alignTop="@+id/label_txpower"
+                android:layout_toRightOf="@+id/label_txpower"/>
+    </RelativeLayout>
+
+    <include layout="@layout/include_layoutseperator"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                style="@style/BeaconLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last reading:"
+                android:id="@+id/label_lastreading"
+                android:layout_alignParentLeft="true"/>
+
+        <TextView
+                style="@style/BeaconValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-10 RSSI"
+                android:id="@+id/value_lastreading"
+                android:layout_toRightOf="@id/label_lastreading" />
+
+        <TextView
+                style="@style/BeaconValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10:00:00"
+                android:layout_marginRight="0dp"
+                android:id="@+id/value_timestamp"
+                android:layout_alignParentRight="true" />
+
+
+    </RelativeLayout>
+
+    <include layout="@layout/include_layoutseperator"/>
+
+    <TextView
+            style="@style/BeaconLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RSSI"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentRight="@id/label_lastreading" />
+
+    <com.echo.holographlibrary.LineGraph
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            graph:strokeSpacing="10dp"
+            graph:strokeColor="#DDDDDD"
+            android:id="@+id/graph_rssi"/>
+
+    <TextView
+            style="@style/BeaconLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Distance"
+            android:layout_alignParentRight="@id/label_lastreading" />
+
+    <com.echo.holographlibrary.BarGraph
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:id="@+id/graph_distance"/>
+
+</LinearLayout>

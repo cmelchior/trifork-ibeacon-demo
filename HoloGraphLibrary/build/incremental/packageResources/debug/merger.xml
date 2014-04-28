@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/res" >
+            <file
+                name="popup_black"
+                path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/res/drawable-xhdpi/popup_black.9.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/res/values/attrs.xml"
+                qualifiers="" >
+                <declare-styleable name="LineGraph" >
+                    <attr
+                        name="strokeColor"
+                        format="color" />
+                    <attr
+                        name="lineAxisColor"
+                        format="color" />
+                    <attr
+                        name="strokeWidth"
+                        format="dimension" />
+                    <attr
+                        name="strokeSpacing"
+                        format="dimension" />
+                    <attr
+                        name="useDip"
+                        format="boolean" />
+                </declare-styleable>
+                <declare-styleable name="PieGraph" >
+                    <attr
+                        name="innerCircleRatio"
+                        format="integer" />
+                    <attr
+                        name="slicePadding"
+                        format="dimension" />
+                </declare-styleable>
+                <declare-styleable name="BarGraph" >
+                    <attr
+                        name="barAxisColor"
+                        format="color" />
+                    <attr
+                        name="orientation"
+                        format="enum" >
+                        <enum
+                            name="horizontal"
+                            value="0" />
+                        <enum
+                            name="vertical"
+                            value="1" />
+                    </attr>
+                </declare-styleable>
+            </file>
+        </source>
+        <source path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/build/res/rs/debug" />
+        <source path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/build/res/generated/debug" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/Users/christianmelchior/Documents/dev/git/TriforkIBeaconDemo/HoloGraphLibrary/src/debug/res" />
+    </dataSet>
+
+</merger>

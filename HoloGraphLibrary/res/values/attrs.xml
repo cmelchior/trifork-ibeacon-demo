@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PieGraph">
+        <attr name="innerCircleRatio" format="integer"/>
+        <attr name="slicePadding" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="LineGraph">
+        <attr name="strokeColor" format="color"/>
+        <attr name="lineAxisColor" format="color"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="strokeSpacing" format="dimension"/>
+        <attr name="useDip" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="BarGraph">
+        <attr name="barAxisColor" format="color"/>
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

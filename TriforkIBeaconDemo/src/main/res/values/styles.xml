@@ -1,0 +1,31 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BeaconLabelSmall">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="BeaconValueSmall">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="BeaconLabel">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="BeaconValue">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+
+</resources>
