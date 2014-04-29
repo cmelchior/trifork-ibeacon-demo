@@ -58,7 +58,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+                            .setTabListener(this)
+            );
         }
     }
 
@@ -80,21 +81,31 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Subscribe
     public void fullScanRequested(RequestFullScanEvent event) {
         if (isFullScanning) return;
-        detector.stopMonitoring();
-        detector.stopRanging();
-        detector.startFullScan();
-        isFullScanning = true;
-        isBeaconScanning = false;
+        detector.connect(new IBeaconDetector.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                detector.stopMonitoring();
+                detector.stopRanging();
+                detector.startFullScan();
+                isFullScanning = true;
+                isBeaconScanning = false;
+            }
+        });
     }
 
     @Subscribe
     public void beaconScanRequested(RequestBeaconScanEvent event) {
         if (isBeaconScanning) return;
-        detector.stopFullScan();
-        detector.startRanging();
-        detector.startMonitoring();
-        isFullScanning = false;
-        isBeaconScanning = true;
+        detector.connect(new IBeaconDetector.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                detector.stopFullScan();
+                detector.startRanging();
+                detector.startMonitoring();
+                isFullScanning = false;
+                isBeaconScanning = true;
+            }
+        });
     }
 
     @Override

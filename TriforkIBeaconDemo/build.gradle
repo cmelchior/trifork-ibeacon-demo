@@ -9,7 +9,10 @@ buildscript {
 apply plugin: 'android'
 
 repositories {
-        mavenCentral()
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -18,7 +21,7 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.2.1'
     compile 'com.squareup.dagger:dagger-compiler:1.2.1'
     compile 'com.android.support:support-v13:19.+'
-    compile 'com.radiusnetworks:AndroidIBeaconLibrary:0.7.+'
+    compile 'com.radiusnetworks:AndroidIBeaconLibrary:0.7.6@aar'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':HoloGraphLibrary')
 }
@@ -28,7 +31,7 @@ android {
     buildToolsVersion "19.0.3"
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"

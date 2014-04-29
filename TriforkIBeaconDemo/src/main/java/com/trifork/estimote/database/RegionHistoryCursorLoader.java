@@ -20,6 +20,6 @@ public class RegionHistoryCursorLoader extends CursorLoader {
 
     @Override
     public Cursor loadInBackground() {
-        return dao.getHistory(persistentState.getSelectedBeacon());
+        return dao.getHistory(persistentState.getSelectedRegion());
     }
 }

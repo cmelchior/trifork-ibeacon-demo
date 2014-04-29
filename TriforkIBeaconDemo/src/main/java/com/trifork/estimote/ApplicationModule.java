@@ -8,6 +8,7 @@ import com.trifork.estimote.database.Database;
 import com.trifork.estimote.database.RegionHistoryCursorLoader;
 import com.trifork.estimote.detectors.EstimoteDetector;
 import com.trifork.estimote.detectors.IBeaconDetector;
+import com.trifork.estimote.detectors.RadiusNetworkDetector;
 import com.trifork.estimote.ui.*;
 import com.trifork.estimote.util.PersistentState;
 import dagger.Module;
@@ -26,6 +27,7 @@ import javax.inject.Singleton;
             RangingFragment.class,
             RegionLogFragment.class,
             EstimoteDetector.class,
+            RadiusNetworkDetector.class,
             RegionHistoryCursorLoader.class
         },
         complete = true,
@@ -47,7 +49,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Bus provideBus() {
-        return new Bus(ThreadEnforcer.ANY);
+        return new Bus(ThreadEnforcer.MAIN);
     }
 
     @Provides
@@ -58,7 +60,7 @@ public class ApplicationModule {
 
     @Provides
     IBeaconDetector providesIBeaconDetector() {
-        return new EstimoteDetector();
+        return new RadiusNetworkDetector();
     }
 
     @Provides

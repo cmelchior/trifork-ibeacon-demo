@@ -1,9 +1,22 @@
 package com.trifork.estimote.detectors;
 
 public interface IBeaconDetector {
-    // Lifecycle methods
-    public void onStop();
-    void onDestroy();
+
+    /**
+     * Connects/Starts the IBeaconDetector service.
+     * All other calls will fail if the service isn't connected first.
+     */
+    void connect(ServiceReadyCallback callback);
+
+    /**
+     * Stops the IBeaconDetector service
+     */
+    void disconnect();
+
+    /**
+     * @return Returns true if the service is already running, false otherwise.
+     */
+    boolean isServiceReady();
 
     void startRanging();
     void stopRanging();
@@ -13,4 +26,8 @@ public interface IBeaconDetector {
 
     void startFullScan();
     void stopFullScan();
+
+    public interface ServiceReadyCallback {
+        public void serviceReady();
+    }
 }

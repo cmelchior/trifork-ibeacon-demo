@@ -60,8 +60,8 @@ public class ScanFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Region oldBeacon = selectedBeacon;
-                persistentState.setSelectedBeacon(adapter.getItem(position));
-                selectedBeacon = persistentState.getSelectedBeacon();
+                persistentState.setSelectedRegion(adapter.getItem(position));
+                selectedBeacon = persistentState.getSelectedRegion();
                 adapter.notifyDataSetChanged();
                 if (oldBeacon == null || !oldBeacon.equals(selectedBeacon)) {
                     bus.post(new NewBeaconSelectedEvent());
@@ -96,6 +96,7 @@ public class ScanFragment extends BaseFragment {
     }
 
     private void startScan() {
+        selectedBeacon = persistentState.getSelectedRegion();
         bus.post(new RequestFullScanEvent());
     }
 

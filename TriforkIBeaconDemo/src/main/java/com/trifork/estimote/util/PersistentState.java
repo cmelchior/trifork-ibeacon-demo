@@ -18,7 +18,7 @@ public class PersistentState  {
         prefs = context.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
     }
 
-    public Region getSelectedBeacon() {
+    public Region getSelectedRegion() {
         String uuid = prefs.getString(KEY_UUID, "");
         int major = prefs.getInt(KEY_MAJOR, 0);
         int minor = prefs.getInt(KEY_MINOR, 0);
@@ -29,7 +29,7 @@ public class PersistentState  {
         }
     }
 
-    public void setSelectedBeacon(Beacon beacon) {
+    public void setSelectedRegion(Beacon beacon) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(KEY_UUID,beacon.getProximityUUID());
         editor.putInt(KEY_MAJOR, beacon.getMajor());

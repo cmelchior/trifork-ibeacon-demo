@@ -88,7 +88,7 @@ public class RegionLogFragment extends BaseFragment implements LoaderManager.Loa
             dao.execute(new Runnable() {
                 @Override
                 public void run() {
-                    dao.clearLog(persistentState.getSelectedBeacon());
+                    dao.clearLog(persistentState.getSelectedRegion());
                 }
             });
             return true;
