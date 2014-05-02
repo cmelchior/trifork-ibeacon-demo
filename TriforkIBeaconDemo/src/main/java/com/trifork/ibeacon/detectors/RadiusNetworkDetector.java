@@ -46,7 +46,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
     public RadiusNetworkDetector() {
         BaseApplication.inject(this);
         beaconManager = IBeaconManager.getInstanceForApplication(context);
-        beaconManager.setForegroundScanPeriod(5000);
     }
 
 
@@ -164,8 +163,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
         });
 
         try {
-            com.estimote.sdk.Region selectedRegion = persistentState.getSelectedRegion();
-            if (selectedRegion == null) return;
             beaconManager.startRangingBeaconsInRegion(FULL_SCAN_REGION);
             fullScanStarted = true;
             Log.i(TAG, "Full scan started");

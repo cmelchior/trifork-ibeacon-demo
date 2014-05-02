@@ -133,7 +133,7 @@ public class Dao {
 
     public Cursor getHistory(Region beacon) {
         assertAcccess();
-
+        if (beacon == null) return null;
         Cursor c = db.query(false,
                 Database.TABLE_REGIONS,
                 Database.ALL_COLUMNS,
