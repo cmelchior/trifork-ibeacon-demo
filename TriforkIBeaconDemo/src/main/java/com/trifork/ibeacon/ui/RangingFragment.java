@@ -1,7 +1,11 @@
 package com.trifork.ibeacon.ui;
 
 
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +21,34 @@ import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 
 public class RangingFragment extends BaseFragment {
 
-    @InjectView(R.id.container) View container;
+    private static final int MIN_PAUSE_MS = 125; // Minimum pause between beeps at minimum distance
+    private static final int MAX_PAUSE_MS = 2000; // Pause between beeps at maximum distance
+
     @InjectView(R.id.range) TextView rangeView;
     @InjectView(R.id.proximity) TextView proximityView;
+
+    private Handler handler = new Handler();
+    private ToneGenerator toneG;
+    private int pause = MAX_PAUSE_MS;
+    private Runnable toneRunner = new Runnable() {
+        @Override
+        public void run() {
+            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 125);
+            handler.postDelayed(this, pause);
+        }
+    };
 
     public static RangingFragment newInstance() {
         Bundle args = new Bundle();
         RangingFragment fragment = new RangingFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
     }
 
     @Override
@@ -41,11 +64,26 @@ public class RangingFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            startScan();
+        }
+    }
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            bus.post(new RequestBeaconScanEvent());
+        if (isResumed() && isVisibleToUser) {
+            startScan();
+        } else {
+            stopSound();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(toneRunner);
     }
 
     @Subscribe
@@ -57,9 +95,28 @@ public class RangingFragment extends BaseFragment {
         rangeView.setText(com.trifork.ibeacon.util.Utils.formatRange(distanceM) + "m");
         proximityView.setText(proximity.toString());
 
-        // Transition between colors based on distances
-        // < 0.5 -> green
-        // 5 > x > 0.5 -> yellow
-        // > 5 -> red
+        // Calculate new pause based on current RSSI
+        // Convert to positive numbers to not make my head hurt.
+        float txPower = -event.getBeacon().getMeasuredPower();
+        float rssi = -event.getBeacon().getRssi();
+        if (rssi <= txPower) {
+            pause = MIN_PAUSE_MS;
+        } else if (rssi >= 100) {
+            pause = MAX_PAUSE_MS;
+        } else {
+            float factor = ((rssi - txPower)/(100 - txPower));
+            pause = (int) (MIN_PAUSE_MS + (MAX_PAUSE_MS - MIN_PAUSE_MS) * factor);
+        }
+    }
+
+    private void startScan() {
+        bus.post(new RequestBeaconScanEvent());
+        if (persistentState.getSelectedRegion() != null) {
+            handler.post(toneRunner);
+        }
+    }
+
+    private void stopSound() {
+        handler.removeCallbacks(toneRunner);
     }
 }

@@ -62,7 +62,7 @@ public class ApplicationModule {
 
     @Provides
     IBeaconDetector providesIBeaconDetector() {
-        return new CustomDetector();
+        return new RadiusNetworkDetector();
     }
 
     @Provides

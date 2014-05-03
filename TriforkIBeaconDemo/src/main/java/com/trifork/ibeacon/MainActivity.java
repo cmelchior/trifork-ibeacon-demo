@@ -154,7 +154,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             switch(position) {
                 case 0: return ScanFragment.newInstance();
                 case 1: return BeaconDataFragment.newInstance();
-                case 2: return RegionLogFragment.newInstance();
+                case 2: return RangingFragment.newInstance();
+                case 3: return RegionLogFragment.newInstance();
                 default: throw new RuntimeException("Not supported: " + position);
             }
         }
@@ -170,7 +171,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             switch (position) {
                 case 0: return getString(R.string.title_scan).toUpperCase(l);
                 case 1: return getString(R.string.title_beacondata).toUpperCase(l);
-                case 2: return getString(R.string.title_log).toUpperCase(l);
+                case 2:return getString(R.string.title_detector);
+                case 3: return getString(R.string.title_log).toUpperCase(l);
             }
             return null;
         }
