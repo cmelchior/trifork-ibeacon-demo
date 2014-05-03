@@ -25,12 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name="com.trifork.ibeacon.ui.AboutActivity"
-                android:label="@string/action_settings"
-                android:screenOrientation="portrait">
-        </activity>
-
         <!-- Services -->
         <service
                 android:name="com.estimote.sdk.service.BeaconService"

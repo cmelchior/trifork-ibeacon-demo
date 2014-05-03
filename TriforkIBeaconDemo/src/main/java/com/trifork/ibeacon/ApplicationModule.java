@@ -21,7 +21,6 @@ import javax.inject.Singleton;
 @Module(injects = {
             BaseActivity.class,
             MainActivity.class,
-            AboutActivity.class,
             BaseFragment.class,
             ScanFragment.class,
             BeaconDataFragment.class,

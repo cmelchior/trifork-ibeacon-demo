@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_marginTop="40dp"
-              android:layout_marginLeft="@dimen/activity_vertical_margin"
-              android:layout_marginRight="@dimen/activity_vertical_margin"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_vertical_margin">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Trifork iBeacon Demo"
-            android:textSize="30dp"
-            android:textStyle="bold"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
             android:id="@+id/textView"
-            android:layout_gravity="center_horizontal"/>
-
-    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="v1.0"
+            android:layout_gravity="center_horizontal"
+            android:text="Trifork iBeacon Demo"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal"/>
-
-    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="by: Christian Melchior"
+            android:layout_gravity="center_horizontal"
+            android:text="v1.0"
             android:layout_marginBottom="30dp"
-            android:id="@+id/textView3"
-            android:layout_gravity="center_horizontal"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <include layout="@layout/include_layoutseperator" />
-
-    <TextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Using:"
-            android:id="@+id/textView4"/>
+            android:layout_gravity="center_horizontal"
+            android:text="Christian Melchior"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="\@chrmelchior"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="cme\@trifork.com"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -109,24 +109,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, AboutActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
@@ -162,7 +144,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
