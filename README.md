@@ -12,10 +12,10 @@ Slides can be found here:
 
 1. Screens
 ---------------------------
-![iBeacon scanner](images/scan.png?raw=true)
-![iBeacon data](images/data.png?raw=true)
-![iBeacon ranging](images/range.png?raw=true)
-![iBeacon log](images/log.png?raw=true)
+![iBeacon scanner](images/scan.png?raw=true =200x)
+![iBeacon data](images/data.png?raw=true =200x)
+![iBeacon ranging](images/range.png?raw=true =200x)
+![iBeacon log](images/log.png?raw=true =200x)
 
 
 2. iBeacon SDK's
