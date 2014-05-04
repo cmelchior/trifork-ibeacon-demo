@@ -46,6 +46,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
     public RadiusNetworkDetector() {
         BaseApplication.inject(this);
         beaconManager = IBeaconManager.getInstanceForApplication(context);
+        beaconManager.setForegroundScanPeriod(2000);
     }
 
 
