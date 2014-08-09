@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.echo.holographlibrary.*;
-import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
@@ -17,6 +16,8 @@ import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.util.CircularBuffer;
+
+import org.altbeacon.beacon.Beacon;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class BeaconDataFragment extends BaseFragment {
         distances.add(Utils.computeProximity(beacon));
 
         // Update beacon info and reading
+        if (uuidView == null) return;
         uuidView.setText(beacon.getProximityUUID());
         majorView.setText(Integer.toString(beacon.getMajor()));
         minorView.setText(Integer.toString(beacon.getMinor()));

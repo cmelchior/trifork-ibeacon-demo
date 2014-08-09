@@ -1,27 +1,26 @@
 package com.trifork.ibeacon.eventbus;
 
 import com.estimote.sdk.Beacon;
-import com.radiusnetworks.ibeacon.IBeacon;
 import com.trifork.ibeacon.util.Utils;
 
 import java.util.Calendar;
 
 public class BeaconScanCompleteEvent implements OttoEvent {
 
-    private final Beacon beacon;
+    private final org.altbeacon.beacon.Beacon beacon;
     private final Calendar timestamp;
 
-    public BeaconScanCompleteEvent(Calendar timestamp, Beacon beacon) {
+    public BeaconScanCompleteEvent(Calendar timestamp, org.altbeacon.beacon.Beacon beacon) {
         this.timestamp = timestamp;
         this.beacon = beacon;
     }
 
-    public BeaconScanCompleteEvent(Calendar timestamp, IBeacon beacon) {
+    public BeaconScanCompleteEvent(Calendar timestamp, Beacon beacon) {
         this.timestamp = timestamp;
         this.beacon = Utils.convertIBeacon(beacon);
     }
 
-    public Beacon getBeacon() {
+    public org.altbeacon.beacon.Beacon getBeacon() {
         return beacon;
     }
 

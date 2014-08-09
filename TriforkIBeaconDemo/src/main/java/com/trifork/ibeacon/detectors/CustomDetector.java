@@ -2,10 +2,11 @@ package com.trifork.ibeacon.detectors;
 
 import android.content.Context;
 
-import com.radiusnetworks.ibeacon.IBeacon;
 import com.squareup.otto.Bus;
 import com.trifork.ibeacon.BaseApplication;
 import com.trifork.ibeacon.eventbus.FullScanCompleteEvent;
+
+import org.altbeacon.beacon.Beacon;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class CustomDetector implements IBeaconDetector {
     public void startFullScan() {
         beaconManager.setRangingCallback(new BeaconManager.ScanCompletedCallback() {
             @Override
-            public void beaconsDiscovered(List<IBeacon> beacons) {
+            public void beaconsDiscovered(List<Beacon> beacons) {
                 bus.post(new FullScanCompleteEvent(beacons));
             }
         });

@@ -7,8 +7,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.radiusnetworks.ibeacon.IBeacon;
 import com.trifork.ibeacon.BuildConfig;
+
+import org.altbeacon.beacon.Beacon;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,11 +29,11 @@ public class BeaconManager {
     private Handler handler = new Handler();
 
     private ScanCompletedCallback rangingScanCallback;
-    private HashSet<IBeacon> discoveredBeacons = new HashSet<>();
+    private HashSet<Beacon> discoveredBeacons = new HashSet<>();
     private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-            IBeacon result = getBeaconsFromScanRecord(device, rssi, scanRecord);
+            Beacon result = getBeaconsFromScanRecord(device, rssi, scanRecord);
             if (result != null) {
                 discoveredBeacons.add(result);
             }
@@ -52,7 +53,7 @@ public class BeaconManager {
                 public void run() {
                     scanning = false;
                     adapter.stopLeScan(leScanCallback);
-                    ArrayList<IBeacon> result = new ArrayList<IBeacon>();
+                    ArrayList<Beacon> result = new ArrayList<>();
                     result.addAll(discoveredBeacons);
                     if (rangingScanCallback != null) {
                         rangingScanCallback.beaconsDiscovered(result);
@@ -78,11 +79,11 @@ public class BeaconManager {
     }
 
     public interface ScanCompletedCallback {
-        public void beaconsDiscovered(List<IBeacon> beacons);
+        public void beaconsDiscovered(List<Beacon> beacons);
     }
 
     // Copy from RadiusNetwork SDK
-    private IBeacon getBeaconsFromScanRecord(BluetoothDevice device, int rssi, byte[] scanData) {
+    private Beacon getBeaconsFromScanRecord(BluetoothDevice device, int rssi, byte[] scanData) {
         int startByte = 2;
         boolean patternFound = false;
         while (startByte <= 5) {
@@ -117,7 +118,11 @@ public class BeaconManager {
         sb.append(hexString.substring(20, 32));
         String proximityUuid = sb.toString();
 
-        return new IBeacon(proximityUuid, major, minor);
+        return new Beacon.Builder()
+                .setId1(proximityUuid)
+                .setId2(Integer.toString(major))
+                .setId3(Integer.toString(minor))
+                .build();
     }
 
     private String bytesToHex(byte[] bytes) {

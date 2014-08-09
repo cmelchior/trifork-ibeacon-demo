@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
-import com.radiusnetworks.ibeacon.*;
 import com.squareup.otto.Bus;
 import com.trifork.ibeacon.BaseApplication;
 import com.trifork.ibeacon.database.Dao;
@@ -19,11 +18,22 @@ import com.trifork.ibeacon.eventbus.OttoEvent;
 import com.trifork.ibeacon.util.PersistentState;
 import com.trifork.ibeacon.util.Utils;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.BeaconManager;
+
 import javax.inject.Inject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
+public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
 
     private static final String TAG = RadiusNetworkDetector.class.getName();
     private static final Region FULL_SCAN_REGION = new Region("All", null, null, null);
@@ -34,7 +44,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
     @Inject Dao dao;
 
     private final Handler mainThread = new Handler(Looper.getMainLooper());
-    private final IBeaconManager beaconManager;
+    private final BeaconManager beaconManager;
     private boolean rangingStarted = false;
     private boolean monitorStarted = false;
     private boolean fullScanStarted = false;
@@ -45,8 +55,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
 
     public RadiusNetworkDetector() {
         BaseApplication.inject(this);
-        beaconManager = IBeaconManager.getInstanceForApplication(context);
-        beaconManager.setForegroundScanPeriod(2000);
+        beaconManager = BeaconManager.getInstanceForApplication(context);
     }
 
 
@@ -58,9 +67,9 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
-            public void didRangeBeaconsInRegion(Collection<IBeacon> iBeacons, Region region) {
+            public void didRangeBeaconsInRegion(Collection<Beacon> iBeacons, Region region) {
                 if (iBeacons.size() == 1) {
-                    IBeacon beacon = iBeacons.iterator().next();
+                    Beacon beacon = iBeacons.iterator().next();
                     Log.d(TAG, "Discovered beacon: " + beacon);
                     postOnMainThread(new BeaconScanCompleteEvent(Calendar.getInstance(), beacon));
                 }
@@ -157,8 +166,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
-            public void didRangeBeaconsInRegion(Collection<IBeacon> iBeacons, Region region) {
-                Log.d(TAG, "Discovered beacons: " + iBeacons.size());
+            public void didRangeBeaconsInRegion(Collection<Beacon> iBeacons, Region region) {
                 postOnMainThread(new FullScanCompleteEvent(iBeacons));
             }
         });
@@ -201,7 +209,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
 
     @Override
     public void disconnect() {
-        beaconManager.unBind(this);
+        beaconManager.unbind(this);
     }
 
     @Override
@@ -210,7 +218,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
     }
 
     @Override
-    public void onIBeaconServiceConnect() {
+    public void onBeaconServiceConnect() {
         serviceReady = true;
         if (serviceReadyCallback != null) {
             serviceReadyCallback.serviceReady();
@@ -234,7 +242,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, IBeaconConsumer {
     }
 
     private void postOnMainThread(final OttoEvent event) {
-        mainThread.post(new Runnable() {
+        mainThread.post( new Runnable() {
             @Override
             public void run() {
                 bus.post(event);

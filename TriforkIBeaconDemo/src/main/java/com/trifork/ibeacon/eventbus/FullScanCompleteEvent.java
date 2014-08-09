@@ -1,8 +1,8 @@
 package com.trifork.ibeacon.eventbus;
 
-import com.estimote.sdk.Beacon;
-import com.radiusnetworks.ibeacon.IBeacon;
 import com.trifork.ibeacon.util.Utils;
+
+import org.altbeacon.beacon.Beacon;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,13 +13,13 @@ public class FullScanCompleteEvent implements OttoEvent {
 
     private final List<Beacon> beacons;
 
-    public FullScanCompleteEvent(List<Beacon> beacons) {
-        this.beacons = beacons;
+    public FullScanCompleteEvent(Collection<Beacon> beacons) {
+        this.beacons = new ArrayList(beacons);
     }
 
-    public FullScanCompleteEvent(Collection<IBeacon> iBeacons) {
-        beacons = new ArrayList<>();
-        Iterator<IBeacon> it = iBeacons.iterator();
+    public FullScanCompleteEvent(List<com.estimote.sdk.Beacon> iBeacons) {
+        beacons = new ArrayList<Beacon>();
+        Iterator<com.estimote.sdk.Beacon> it = iBeacons.iterator();
         while(it.hasNext()) {
             beacons.add(Utils.convertIBeacon(it.next()));
         }

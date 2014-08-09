@@ -2,7 +2,8 @@ package com.trifork.ibeacon.util;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
-import com.radiusnetworks.ibeacon.IBeacon;
+
+import org.altbeacon.beacon.Identifier;
 
 import java.text.DecimalFormat;
 
@@ -21,15 +22,29 @@ public class Utils {
                 && entry.getMinor() == selectedBeacon.getMinor());
     }
 
-    public static Beacon convertIBeacon(IBeacon beacon) {
-       return new Beacon(beacon.getProximityUuid(), "", beacon.getBluetoothAddress(), beacon.getMajor(), beacon.getMinor(), beacon.getTxPower(), beacon.getRssi());
+    public static org.altbeacon.beacon.Beacon convertIBeacon(Beacon beacon) {
+       return new org.altbeacon.beacon.Beacon.Builder()
+               .setId1(beacon.getProximityUUID())
+               .setId2(Integer.toString(beacon.getMajor()))
+               .setId3(Integer.toString(beacon.getMinor()))
+               .setBluetoothAddress(beacon.getMacAddress())
+               .setTxPower(beacon.getMeasuredPower())
+               .setRssi(beacon.getRssi())
+               .build();
     }
 
-    public static com.radiusnetworks.ibeacon.Region convertRegion(Region region) {
-        return new com.radiusnetworks.ibeacon.Region(region.getIdentifier(), region.getProximityUUID(),region.getMajor(), region.getMinor());
+    public static org.altbeacon.beacon.Region convertRegion(Region region) {
+        return new org.altbeacon.beacon.Region(
+                region.getIdentifier(),
+                Identifier.parse(region.getProximityUUID()),
+                Identifier.fromInt(region.getMajor()),
+                Identifier.fromInt(region.getMinor()));
     }
 
-    public static Region convertRegion(com.radiusnetworks.ibeacon.Region region) {
-        return new Region(region.getUniqueId(), region.getProximityUuid(), region.getMajor(), region.getMinor());
+    public static Region convertRegion(org.altbeacon.beacon.Region region) {
+        return new Region(region.getUniqueId(),
+                region.getId1().toString(),
+                region.getId2().toInt(),
+                region.getId3().toInt());
     }
 }
