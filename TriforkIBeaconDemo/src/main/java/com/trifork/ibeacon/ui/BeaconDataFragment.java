@@ -8,14 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.echo.holographlibrary.*;
-import com.estimote.sdk.Utils;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
 import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
-import com.trifork.ibeacon.util.CircularBuffer;
+import com.trifork.ibeacon.util.*;
 
 import org.altbeacon.beacon.Beacon;
 
@@ -39,7 +38,7 @@ public class BeaconDataFragment extends BaseFragment {
 
     private SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss.S");
     private CircularBuffer<Integer> readings = new CircularBuffer<>(100);
-    private CircularBuffer<Utils.Proximity> distances = new CircularBuffer<>(100);
+    private CircularBuffer<com.trifork.ibeacon.util.Utils.Proximity> distances = new CircularBuffer<>(100);
 
     public static BeaconDataFragment newInstance() {
         Bundle args = new Bundle();
@@ -94,15 +93,15 @@ public class BeaconDataFragment extends BaseFragment {
         Beacon beacon = event.getBeacon();
         Calendar time = event.getTimestamp();
         readings.add(beacon.getRssi());
-        distances.add(Utils.computeProximity(beacon));
+        distances.add(Utils.proximityFromDistance(beacon.getDistance()));
 
         // Update beacon info and reading
         if (uuidView == null) return;
-        uuidView.setText(beacon.getProximityUUID());
-        majorView.setText(Integer.toString(beacon.getMajor()));
-        minorView.setText(Integer.toString(beacon.getMinor()));
-        txPowerView.setText(String.format("%s dBm", beacon.getMeasuredPower()));
-        lastReadingView.setText(String.format("%s dBm (%s m)", beacon.getRssi(), com.trifork.ibeacon.util.Utils.formatRange(Utils.computeAccuracy(beacon))));
+        uuidView.setText(beacon.getId1().toString());
+        majorView.setText(beacon.getId2().toString());
+        minorView.setText(beacon.getId3().toString());
+        txPowerView.setText(String.format("%s dBm", beacon.getTxPower()));
+        lastReadingView.setText(String.format("%s dBm (%s m)", beacon.getRssi(), Utils.formatRange(beacon.getDistance())));
         timestampView.setText(timeFormatter.format(time.getTime()));
 
         updateRSSIGraph();

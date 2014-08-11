@@ -7,8 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Looper;
 
-import com.estimote.sdk.Region;
 import com.trifork.ibeacon.BuildConfig;
+
+import org.altbeacon.beacon.Region;
 
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
@@ -53,10 +54,10 @@ public class Dao {
         assertAcccess();
 
         ContentValues values = new ContentValues();
-        values.put(Database.COLUMN_UUID, region.getProximityUUID());
-        values.put(Database.COLUMN_MAJOR, region.getMajor());
-        values.put(Database.COLUMN_MINOR, region.getMinor());
-        values.put(Database.COLUMN_REGIONNAME, region.getIdentifier());
+        values.put(Database.COLUMN_UUID, region.getId1().toString());
+        values.put(Database.COLUMN_MAJOR, region.getId2().toInt());
+        values.put(Database.COLUMN_MINOR, region.getId3().toInt());
+        values.put(Database.COLUMN_REGIONNAME, region.getUniqueId());
         values.put(Database.COLUMN_ENTER, Calendar.getInstance().getTime().getTime());
         values.put(Database.COLUMN_EXIT, (Long) null);
 
@@ -132,14 +133,14 @@ public class Dao {
         return new RegionHistoryEntry(id, uuid, major, minor, name, enter, exit);
     }
 
-    public Cursor getHistory(Region beacon) {
+    public Cursor getHistory(Region region) {
         assertAcccess();
-        if (beacon == null) return null;
+        if (region == null) return null;
         Cursor c = db.query(false,
                 Database.TABLE_REGIONS,
                 Database.ALL_COLUMNS,
                 Database.COLUMN_UUID +  "=? AND " + Database.COLUMN_MAJOR + "=? AND " + Database.COLUMN_MINOR + "=?",
-                new String[] { beacon.getProximityUUID(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()) },
+                new String[] { region.getId1().toString(), Integer.toString(region.getId2().toInt()), Integer.toString(region.getId3().toInt()) },
                 null,
                 null,
                 null,
@@ -158,7 +159,7 @@ public class Dao {
         int result  = db.delete(
                 Database.TABLE_REGIONS,
                 Database.COLUMN_UUID +  "=? AND " + Database.COLUMN_MAJOR + "=? AND " + Database.COLUMN_MINOR + "=?",
-                new String[] { beacon.getProximityUUID(), Integer.toString(beacon.getMajor()), Integer.toString(beacon.getMinor()) }
+                new String[] { beacon.getId1().toString(), beacon.getId2().toString(), beacon.getId3().toString() }
         );
 
         if (result > 0) {

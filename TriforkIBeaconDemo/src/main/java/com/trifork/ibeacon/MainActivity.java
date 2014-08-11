@@ -4,15 +4,13 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
+
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.database.Dao;
-import com.trifork.ibeacon.detectors.IBeaconDetector;
+import com.trifork.ibeacon.detectors.BeaconScanner;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
 import com.trifork.ibeacon.ui.*;
@@ -24,12 +22,10 @@ import java.util.Locale;
 public class MainActivity extends BaseActivity implements ActionBar.TabListener {
 
     @Inject Dao dao;
-    @Inject IBeaconDetector detector;
+    @Inject BeaconScanner scanner;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
-    private boolean isFullScanning = false;
-    private boolean isBeaconScanning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +62,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Override
     public void onStop() {
         super.onStop();
-        detector.stopRanging();
-        detector.stopFullScan();
-        isFullScanning = false;
-        isBeaconScanning = false;
+        scanner.stopRanging();
+        scanner.stopFullScan();
     }
 
     @Override
@@ -80,30 +74,26 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
     @Subscribe
     public void fullScanRequested(RequestFullScanEvent event) {
-        if (isFullScanning) return;
-        detector.connect(new IBeaconDetector.ServiceReadyCallback() {
+        if (scanner.isFullScanning()) return;
+        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                detector.stopMonitoring();
-                detector.stopRanging();
-                detector.startFullScan();
-                isFullScanning = true;
-                isBeaconScanning = false;
+                scanner.stopMonitoring();
+                scanner.stopRanging();
+                scanner.startFullScan();
             }
         });
     }
 
     @Subscribe
     public void beaconScanRequested(RequestBeaconScanEvent event) {
-        if (isBeaconScanning) return;
-        detector.connect(new IBeaconDetector.ServiceReadyCallback() {
+        if (scanner.isRangingSingleBeacon()) return;
+        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                detector.stopFullScan();
-                detector.startRanging();
-                detector.startMonitoring();
-                isFullScanning = false;
-                isBeaconScanning = true;
+                scanner.stopFullScan();
+                scanner.startRanging();
+                scanner.startMonitoring();
             }
         });
     }

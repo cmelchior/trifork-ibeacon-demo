@@ -6,10 +6,7 @@ import com.squareup.otto.ThreadEnforcer;
 import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.database.Database;
 import com.trifork.ibeacon.database.RegionHistoryCursorLoader;
-import com.trifork.ibeacon.detectors.CustomDetector;
-import com.trifork.ibeacon.detectors.EstimoteDetector;
-import com.trifork.ibeacon.detectors.IBeaconDetector;
-import com.trifork.ibeacon.detectors.RadiusNetworkDetector;
+import com.trifork.ibeacon.detectors.BeaconScanner;
 import com.trifork.ibeacon.ui.*;
 import com.trifork.ibeacon.util.PersistentState;
 import dagger.Module;
@@ -17,7 +14,7 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-//This annotation must list all activities that wish to inject
+//This annotation must list all classes that wish to inject
 @Module(injects = {
             BaseActivity.class,
             MainActivity.class,
@@ -26,9 +23,7 @@ import javax.inject.Singleton;
             BeaconDataFragment.class,
             RangingFragment.class,
             RegionLogFragment.class,
-            EstimoteDetector.class,
-            RadiusNetworkDetector.class,
-            CustomDetector.class,
+            BeaconScanner.class,
             RegionHistoryCursorLoader.class
         },
         complete = true,
@@ -57,11 +52,6 @@ public class ApplicationModule {
     @Singleton
     Dao providesDao(Context context) {
         return new Dao(new Database(context), context);
-    }
-
-    @Provides
-    IBeaconDetector providesIBeaconDetector() {
-        return new RadiusNetworkDetector();
     }
 
     @Provides

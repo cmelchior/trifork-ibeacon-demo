@@ -7,8 +7,6 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Region;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
@@ -17,6 +15,9 @@ import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
 import com.trifork.ibeacon.util.PersistentState;
 import com.trifork.ibeacon.util.Utils;
+
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.Region;
 
 import javax.inject.Inject;
 
@@ -129,11 +130,11 @@ public class ScanFragment extends BaseFragment {
             } else {
                 holder.beaconIcon.setImageResource(R.drawable.selector_beacon_icon);
             }
-            holder.mac.setText(entry.getMacAddress());
-            holder.uuid.setText(entry.getProximityUUID());
-            holder.major.setText(String.format(getString(R.string.label_major), entry.getMajor()));
-            holder.minor.setText(String.format(getString(R.string.label_minor), entry.getMinor()));
-            holder.txPower.setText(String.format(getString(R.string.label_txpower), entry.getMeasuredPower()));
+            holder.mac.setText(entry.getBluetoothAddress());
+            holder.uuid.setText(entry.getId1().toString());
+            holder.major.setText(String.format(getString(R.string.label_major), entry.getId2().toString()));
+            holder.minor.setText(String.format(getString(R.string.label_minor), entry.getId3().toString()));
+            holder.txPower.setText(String.format(getString(R.string.label_txpower), entry.getTxPower()));
             holder.rssi.setText(String.format(getString(R.string.label_rssi), entry.getRssi()));
             return convertView;
         }

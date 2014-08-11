@@ -2,8 +2,10 @@ package com.trifork.ibeacon.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Region;
+
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.Region;
 
 public class PersistentState  {
 
@@ -25,15 +27,18 @@ public class PersistentState  {
         if (uuid.equals("")) {
             return null;
         } else {
-            return new Region(generateLabel(uuid,major,minor), uuid, major, minor);
+            return new Region(generateLabel(uuid,major,minor),
+                    Identifier.parse(uuid),
+                    Identifier.fromInt(major),
+                    Identifier.fromInt(minor));
         }
     }
 
     public void setSelectedRegion(Beacon beacon) {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(KEY_UUID,beacon.getProximityUUID());
-        editor.putInt(KEY_MAJOR, beacon.getMajor());
-        editor.putInt(KEY_MINOR, beacon.getMinor());
+        editor.putString(KEY_UUID,beacon.getId1().toString());
+        editor.putInt(KEY_MAJOR, beacon.getId2().toInt());
+        editor.putInt(KEY_MINOR, beacon.getId3().toInt());
         editor.commit();
     }
 

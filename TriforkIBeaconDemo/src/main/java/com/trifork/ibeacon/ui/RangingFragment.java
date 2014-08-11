@@ -5,19 +5,19 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.InjectView;
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Utils;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
 import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
+import com.trifork.ibeacon.util.Utils;
+
+import org.altbeacon.beacon.Beacon;
 
 public class RangingFragment extends BaseFragment {
 
@@ -89,15 +89,15 @@ public class RangingFragment extends BaseFragment {
     @Subscribe
     public void onBeaconDataReceived(BeaconScanCompleteEvent event) {
         Beacon beacon = event.getBeacon();
-        double distanceM = Utils.computeAccuracy(beacon);
-        Utils.Proximity proximity = Utils.computeProximity(beacon);
+        double distanceM = beacon.getDistance();
+        Utils.Proximity proximity = Utils.proximityFromDistance(beacon.getDistance());
 
         rangeView.setText(com.trifork.ibeacon.util.Utils.formatRange(distanceM) + "m");
         proximityView.setText(proximity.toString());
 
         // Calculate new pause based on current RSSI
         // Convert to positive numbers to not make my head hurt.
-        float txPower = -event.getBeacon().getMeasuredPower();
+        float txPower = -event.getBeacon().getTxPower();
         float rssi = -event.getBeacon().getRssi();
         if (rssi <= txPower) {
             pause = MIN_PAUSE_MS;

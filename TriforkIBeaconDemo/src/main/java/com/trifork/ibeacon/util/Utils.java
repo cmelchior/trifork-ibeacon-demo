@@ -1,9 +1,7 @@
 package com.trifork.ibeacon.util;
 
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Region;
-
-import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.Region;
 
 import java.text.DecimalFormat;
 
@@ -17,34 +15,45 @@ public class Utils {
 
     public static boolean isSameBeacon(Beacon entry, Region selectedBeacon) {
         if (entry == null || selectedBeacon == null) return false;
-        return (entry.getProximityUUID().equals(selectedBeacon.getProximityUUID())
-                && entry.getMajor() == selectedBeacon.getMajor()
-                && entry.getMinor() == selectedBeacon.getMinor());
+        return (entry.getId1().equals(selectedBeacon.getId1())
+                && entry.getId2().equals(selectedBeacon.getId2())
+                && entry.getId3().equals(selectedBeacon.getId3()));
     }
 
-    public static org.altbeacon.beacon.Beacon convertIBeacon(Beacon beacon) {
-       return new org.altbeacon.beacon.Beacon.Builder()
-               .setId1(beacon.getProximityUUID())
-               .setId2(Integer.toString(beacon.getMajor()))
-               .setId3(Integer.toString(beacon.getMinor()))
-               .setBluetoothAddress(beacon.getMacAddress())
-               .setTxPower(beacon.getMeasuredPower())
-               .setRssi(beacon.getRssi())
-               .build();
+    public static Proximity proximityFromDistance(double accuracy) {
+        if (accuracy < 0.0D) {
+            return Proximity.UNKNOWN;
+        }
+        if (accuracy < 0.5D) {
+            return Proximity.IMMEDIATE;
+        }
+        if (accuracy <= 3.0D) {
+            return Proximity.NEAR;
+        }
+        return Proximity.FAR;
     }
 
-    public static org.altbeacon.beacon.Region convertRegion(Region region) {
-        return new org.altbeacon.beacon.Region(
-                region.getIdentifier(),
-                Identifier.parse(region.getProximityUUID()),
-                Identifier.fromInt(region.getMajor()),
-                Identifier.fromInt(region.getMinor()));
+    private static double computeAccuracy(Beacon beacon) {
+//            if (beacon.getRssi() == 0) {
+//                return -1.0D;
+//            }
+//
+//            double ratio = beacon.getRssi() / beacon.getTxPower();
+//            double rssiCorrection = 0.96D + Math.pow(Math.abs(beacon.getRssi()), 3.0D) % 10.0D / 150.0D;
+//
+//            if (ratio <= 1.0D) {
+//                return Math.pow(ratio, 9.98D) * rssiCorrection;
+//            }
+//            return (0.103D + 0.89978D * Math.pow(ratio, 7.71D)) * rssiCorrection;
+
+        return 0;
     }
 
-    public static Region convertRegion(org.altbeacon.beacon.Region region) {
-        return new Region(region.getUniqueId(),
-                region.getId1().toString(),
-                region.getId2().toInt(),
-                region.getId3().toInt());
+
+    public static enum Proximity {
+        UNKNOWN,
+        IMMEDIATE,
+        NEAR,
+        FAR;
     }
 }

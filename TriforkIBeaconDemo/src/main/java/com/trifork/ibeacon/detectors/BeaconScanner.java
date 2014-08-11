@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.squareup.otto.Bus;
 import com.trifork.ibeacon.BaseApplication;
 import com.trifork.ibeacon.database.Dao;
@@ -16,26 +17,23 @@ import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.FullScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.OttoEvent;
 import com.trifork.ibeacon.util.PersistentState;
-import com.trifork.ibeacon.util.Utils;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
-import org.altbeacon.beacon.BeaconManager;
+
+import java.util.Calendar;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+public class BeaconScanner implements BeaconConsumer {
 
-public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
-
-    private static final String TAG = RadiusNetworkDetector.class.getName();
+    private static final String TAG = BeaconScanner.class.getName();
     private static final Region FULL_SCAN_REGION = new Region("All", null, null, null);
 
     @Inject Context context;
@@ -50,16 +48,16 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
     private boolean fullScanStarted = false;
     private boolean serviceReady = false;
 
-    private ServiceReadyCallback serviceReadyCallback;
     private RegionHistoryEntry currentRegion;
+    private ServiceReadyCallback serviceReadyCallback;
 
-    public RadiusNetworkDetector() {
+    public BeaconScanner() {
         BaseApplication.inject(this);
+        BeaconManager.setDebug(true);
         beaconManager = BeaconManager.getInstanceForApplication(context);
+        beaconManager.getBeaconParsers().set(0, new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")); // Replace AltBeacon parser with iBeacon parser
     }
 
-
-    @Override
     public void startRanging() {
         assertServiceReady();
         if (fullScanStarted) throw new RuntimeException("Full scan in progress");
@@ -77,9 +75,9 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         });
 
         try {
-            com.estimote.sdk.Region selectedRegion = persistentState.getSelectedRegion();
+            Region selectedRegion = persistentState.getSelectedRegion();
             if (selectedRegion == null) return;
-            beaconManager.startRangingBeaconsInRegion(com.trifork.ibeacon.util.Utils.convertRegion(persistentState.getSelectedRegion()));
+            beaconManager.startRangingBeaconsInRegion(persistentState.getSelectedRegion());
             rangingStarted = true;
             Log.i(TAG, "Ranging started");
         } catch (RemoteException e) {
@@ -87,11 +85,10 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void stopRanging() {
         if (!rangingStarted) return;
         try {
-            beaconManager.stopRangingBeaconsInRegion(com.trifork.ibeacon.util.Utils.convertRegion(persistentState.getSelectedRegion()));
+            beaconManager.stopRangingBeaconsInRegion(persistentState.getSelectedRegion());
             rangingStarted = false;
             Log.d(TAG, "Ranging stopped");
         } catch (RemoteException e) {
@@ -99,7 +96,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void startMonitoring() {
         assertServiceReady();
         if (monitorStarted) return;
@@ -112,7 +108,7 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
                 dao.execute(new Runnable() {
                     @Override
                     public void run() {
-                        currentRegion = dao.enterRegion(Utils.convertRegion(region));
+                        currentRegion = dao.enterRegion(region);
                     }
                 });
             }
@@ -136,9 +132,9 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         });
 
         try {
-            com.estimote.sdk.Region selectedRegion = persistentState.getSelectedRegion();
+            Region selectedRegion = persistentState.getSelectedRegion();
             if (selectedRegion == null) return;
-            beaconManager.startMonitoringBeaconsInRegion(Utils.convertRegion(selectedRegion));
+            beaconManager.startMonitoringBeaconsInRegion(selectedRegion);
             monitorStarted = true;
             Log.i(TAG, "Monitoring started");
         } catch (RemoteException e) {
@@ -146,11 +142,10 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void stopMonitoring() {
         if (!monitorStarted) return;
         try {
-            beaconManager.stopMonitoringBeaconsInRegion(Utils.convertRegion(persistentState.getSelectedRegion()));
+            beaconManager.stopMonitoringBeaconsInRegion(persistentState.getSelectedRegion());
             monitorStarted = false;
             Log.d(TAG, "Monitoring stopped");
         } catch (RemoteException e) {
@@ -158,7 +153,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void startFullScan() {
         assertServiceReady();
         if (rangingStarted) throw new RuntimeException("Ranging scan in progress");
@@ -185,7 +179,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         if (!serviceReady) throw new RuntimeException("Service not started");
     }
 
-    @Override
     public void stopFullScan() {
         if (!fullScanStarted) return;
         try {
@@ -197,7 +190,6 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void connect(ServiceReadyCallback callback) {
         serviceReadyCallback = callback;
         if (!serviceReady) {
@@ -207,12 +199,10 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
         }
     }
 
-    @Override
     public void disconnect() {
         beaconManager.unbind(this);
     }
 
-    @Override
     public boolean isServiceReady() {
         return serviceReady;
     }
@@ -248,5 +238,21 @@ public class RadiusNetworkDetector implements IBeaconDetector, BeaconConsumer {
                 bus.post(event);
             }
         });
+    }
+
+    public boolean isRangingSingleBeacon() {
+        return rangingStarted;
+    }
+
+    public boolean isMonitoringRegion() {
+        return monitorStarted;
+    }
+
+    public boolean isFullScanning() {
+        return fullScanStarted;
+    }
+
+    public interface ServiceReadyCallback {
+        public void serviceReady();
     }
 }

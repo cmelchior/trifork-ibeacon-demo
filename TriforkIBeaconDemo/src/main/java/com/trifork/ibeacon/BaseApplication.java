@@ -15,7 +15,6 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         graph = ObjectGraph.create(getModules().toArray());
-        com.estimote.sdk.utils.L.enableDebugLogging(true);
     }
 
     protected List<Object> getModules() {
