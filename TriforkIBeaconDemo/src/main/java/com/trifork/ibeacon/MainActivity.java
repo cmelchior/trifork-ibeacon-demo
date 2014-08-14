@@ -12,8 +12,11 @@ import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.detectors.BeaconScanner;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
+import com.trifork.ibeacon.eventbus.RequestBeaconTransmit;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
 import com.trifork.ibeacon.ui.*;
+
+import org.altbeacon.beacon.Beacon;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -26,6 +29,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    private Beacon beacon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         super.onStop();
         scanner.stopRanging();
         scanner.stopFullScan();
+        scanner.stopTransmitting(beacon);
     }
 
     @Override
@@ -98,6 +103,29 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         });
     }
 
+    @Subscribe
+    public void transmitBeaconRequested(final RequestBeaconTransmit event) {
+        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.transmitBeacon(event.getBeacon(), event.getAdvertiseMode(), event.getTxPowerLevel());
+                beacon = event.getBeacon();
+            }
+        });
+    }
+
+    @Subscribe
+    public void stopTransmitRequest(final RequestBeaconTransmit event) {
+        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.stopTransmitting(event.getBeacon());
+            }
+        });
+    }
+
+
+
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
@@ -126,15 +154,16 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             switch(position) {
                 case 0: return ScanFragment.newInstance();
                 case 1: return BeaconDataFragment.newInstance();
-                case 2: return RangingFragment.newInstance();
-                case 3: return RegionLogFragment.newInstance();
+                case 2: return RegionLogFragment.newInstance();
+                case 3: return NotificationFragment.newInstance();
+                case 4: return TransmitterFragment.newInstance();
                 default: throw new RuntimeException("Not supported: " + position);
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -143,8 +172,9 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             switch (position) {
                 case 0: return getString(R.string.title_scan).toUpperCase(l);
                 case 1: return getString(R.string.title_beacondata).toUpperCase(l);
-                case 2:return getString(R.string.title_detector);
-                case 3: return getString(R.string.title_log).toUpperCase(l);
+                case 2: return getString(R.string.title_log).toUpperCase(l);
+                case 3: return getString(R.string.title_notification).toUpperCase();
+                case 4: return getString(R.string.title_transmitter).toUpperCase();
             }
             return null;
         }

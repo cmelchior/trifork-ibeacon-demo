@@ -15,6 +15,7 @@ import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.util.*;
+import com.trifork.ibeacon.util.Utils;
 
 import org.altbeacon.beacon.Beacon;
 

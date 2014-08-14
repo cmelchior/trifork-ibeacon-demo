@@ -13,4 +13,6 @@
     <string name="label_minor">Minor: %s</string>
     <string name="label_rssi">RSSI: %s dBm</string>
     <string name="label_txpower">TxPower: %s dBm</string>
+    <string name="title_transmitter">Transmitter</string>
+    <string name="title_notification">Notifications</string>
 </resources>

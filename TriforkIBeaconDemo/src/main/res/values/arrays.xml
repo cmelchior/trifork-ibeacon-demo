@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="frequency_array">
+        <item>10 (Low Power)</item>
+        <item>3 (Balanced)</item>
+        <item>1 (Low Latency)</item>
+    </string-array>
+    <string-array name="power_array">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+        <item>Ultra Low</item>
+    </string-array>
+</resources>

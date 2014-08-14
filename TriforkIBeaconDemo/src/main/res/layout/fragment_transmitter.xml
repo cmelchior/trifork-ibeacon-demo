@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/uuidTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/label"
+        android:text="ID1 (UUID):" />
+
+    <EditText
+        android:id="@+id/uuidEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/uuidTextView"
+        android:width="400dip"
+        android:inputType="text"
+        android:text="2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6" />
+
+    <Button
+        android:id="@+id/generateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate"
+        android:layout_alignBottom="@+id/uuidEditText"
+        android:layout_toEndOf="@+id/uuidEditText" />
+
+    <TextView
+        android:id="@+id/majorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/uuidEditText"
+        style="@style/label"
+        android:text="Major (0-65535):" />
+
+    <EditText
+        android:id="@+id/majorEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/majorTextView"
+        android:inputType="number"
+        android:text="1" />
+
+    <TextView
+        android:id="@+id/minorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/majorEditText"
+        android:inputType="number"
+        style="@style/label"
+        android:text="Minor (0-65535):" />
+
+    <EditText
+        android:id="@+id/minorEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/minorTextView"
+        android:inputType="number"
+        android:text="2" />
+
+    <TextView
+        android:id="@+id/powerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/minorEditText"
+        style="?android:attr/label"
+        android:inputType="number"
+        android:text="Power:" />
+
+    <EditText
+        android:id="@+id/powerEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/powerTextView"
+        android:inputType="number"
+        android:text="-56" />
+
+    <TextView
+        android:id="@+id/frequencyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/powerEditText"
+        style="@style/label"
+        android:inputType="number"
+        android:text="Advertisements Per Second:" />
+
+    <Spinner
+        android:id="@+id/frequencySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/frequencyTextView" />
+
+    <TextView
+        android:id="@+id/transmitterPowerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/frequencySpinner"
+        style="?android:attr/label"
+        android:inputType="number"
+        android:text="Transmitter Power:" />
+
+    <Spinner
+        android:id="@+id/transmitterPowerSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/transmitterPowerTextView" />
+
+    <Switch
+        android:id="@+id/enableSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/minorEditText"
+        android:layout_below="@id/transmitterPowerSpinner"
+        android:paddingTop="20dip" />
+
+</RelativeLayout>

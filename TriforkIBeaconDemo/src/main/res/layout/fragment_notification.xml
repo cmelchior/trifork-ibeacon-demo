@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Immediate range notification"
+        android:id="@+id/immediateLabel"
+        style="@style/label"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/immediateSwitch"
+        android:layout_below="@+id/immediateLabel"
+        android:layout_alignParentRight="true"
+        android:checked="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/immediateText"
+        android:text="Found it"
+        android:layout_marginRight="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/immediateSwitch"
+        android:layout_below="@+id/immediateLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Near range notification"
+        style="@style/label"
+        android:layout_marginTop="16dp"
+        android:id="@+id/nearLabel"
+        android:layout_below="@id/immediateText"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearSwitch"
+        android:layout_below="@+id/nearLabel"
+        android:layout_alignParentRight="true"
+        android:checked="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nearText"
+        android:text="Almost there"
+        android:layout_marginRight="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/nearSwitch"
+        android:layout_below="@+id/nearLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        style="@style/label"
+        android:text="Far range notification"
+        android:layout_marginTop="16dp"
+        android:id="@+id/farLabel"
+        android:layout_below="@id/nearText"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/farSwitch"
+        android:layout_below="@+id/farLabel"
+        android:layout_alignParentRight="true"
+        android:checked="false" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/farText"
+        android:text="A bit further away"
+        android:layout_marginRight="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/farSwitch"
+        android:layout_below="@+id/farLabel" />
+
+</RelativeLayout>
