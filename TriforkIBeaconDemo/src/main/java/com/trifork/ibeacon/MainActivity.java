@@ -10,12 +10,10 @@ import android.support.v4.view.ViewPager;
 
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.database.Dao;
-import com.trifork.ibeacon.detectors.BeaconScanner;
+import com.trifork.ibeacon.detectors.BeaconController;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
-import com.trifork.ibeacon.eventbus.RequestBeaconTransmit;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
 import com.trifork.ibeacon.ui.*;
-import com.trifork.ibeacon.widgets.LocationTrackerView;
 
 import org.altbeacon.beacon.Beacon;
 
@@ -26,11 +24,10 @@ import java.util.Locale;
 public class MainActivity extends BaseActivity implements ActionBar.TabListener {
 
     @Inject Dao dao;
-    @Inject BeaconScanner scanner;
+    @Inject BeaconController scanner;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
-    private Beacon beacon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +77,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Subscribe
     public void fullScanRequested(RequestFullScanEvent event) {
         if (scanner.isFullScanning()) return;
-        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
                 scanner.stopMonitoring();
@@ -93,7 +90,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Subscribe
     public void beaconScanRequested(RequestBeaconScanEvent event) {
         if (scanner.isRangingSingleBeacon()) return;
-        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
                 scanner.stopFullScan();

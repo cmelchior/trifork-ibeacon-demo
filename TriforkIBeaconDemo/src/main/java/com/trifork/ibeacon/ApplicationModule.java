@@ -6,7 +6,6 @@ import com.squareup.otto.ThreadEnforcer;
 import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.database.Database;
 import com.trifork.ibeacon.database.RegionHistoryCursorLoader;
-import com.trifork.ibeacon.detectors.BeaconScanner;
 import com.trifork.ibeacon.ui.*;
 import com.trifork.ibeacon.util.PersistentState;
 import dagger.Module;
@@ -25,7 +24,7 @@ import javax.inject.Singleton;
             NotificationFragment.class,
             RegionLogFragment.class,
             IndoorLocationFragment.class,
-            BeaconScanner.class,
+            com.trifork.ibeacon.detectors.BeaconController.class,
             RegionHistoryCursorLoader.class
         },
         complete = true,

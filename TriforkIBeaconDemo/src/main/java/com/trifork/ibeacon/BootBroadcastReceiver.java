@@ -4,15 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.trifork.ibeacon.detectors.BeaconScanner;
-
 import javax.inject.Inject;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 
     public static final String TAG = BootBroadcastReceiver.class.getName();
 
-    @Inject BeaconScanner detector;
+    @Inject com.trifork.ibeacon.detectors.BeaconController detector;
 
     public BootBroadcastReceiver() {
         BaseApplication.inject(this);
