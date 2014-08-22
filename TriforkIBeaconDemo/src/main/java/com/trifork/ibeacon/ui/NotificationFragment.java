@@ -84,7 +84,6 @@ public class NotificationFragment extends BaseFragment {
         }
     }
 
-
     @Subscribe
     public void beaconFound(BeaconScanCompleteEvent event) {
         Utils.Proximity proximity = Utils.proximityFromDistance(event.getBeacon().getDistance());

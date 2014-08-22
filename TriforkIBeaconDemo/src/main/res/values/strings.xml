@@ -15,4 +15,5 @@
     <string name="label_txpower">TxPower: %s dBm</string>
     <string name="title_transmitter">Transmitter</string>
     <string name="title_notification">Notifications</string>
+    <string name="title_location">Location</string>
 </resources>

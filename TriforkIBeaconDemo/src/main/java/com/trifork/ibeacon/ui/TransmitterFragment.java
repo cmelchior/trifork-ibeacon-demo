@@ -1,6 +1,5 @@
 package com.trifork.ibeacon.ui;
 
-import android.bluetooth.le.AdvertiseSettings;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -86,9 +85,9 @@ public class TransmitterFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 switch(position) {
-                    case 0: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_LOW_POWER; break;
-                    case 1: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_BALANCED; break;
-                    case 2: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY; break;
+//                    case 0: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_LOW_POWER; break;
+//                    case 1: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_BALANCED; break;
+//                    case 2: advertiseMode = AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY; break;
                 }
                 stopTransmitting();
             }
@@ -106,10 +105,10 @@ public class TransmitterFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 switch(position) {
-                    case 0: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_HIGH; break;
-                    case 1: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM; break;
-                    case 2: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_LOW; break;
-                    case 3: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_ULTRA_LOW; break;
+//                    case 0: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_HIGH; break;
+//                    case 1: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM; break;
+//                    case 2: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_LOW; break;
+//                    case 3: txPowerLevel = AdvertiseSettings.ADVERTISE_TX_POWER_ULTRA_LOW; break;
                 }
                 stopTransmitting();
             }

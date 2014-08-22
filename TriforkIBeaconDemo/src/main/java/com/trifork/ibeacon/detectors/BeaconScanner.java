@@ -22,7 +22,7 @@ import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.DefaultBeaconParser;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
@@ -57,8 +57,19 @@ public class BeaconScanner implements BeaconConsumer {
         BaseApplication.inject(this);
         beaconManager = BeaconManager.getInstanceForApplication(context);
         beaconManager.getBeaconParsers().set(0, new IBeaconParser()); // Replace AltBeacon parser with iBeacon parser
-        beaconManager.getTransmitBeaconParsers().set(0, new IBeaconParser()); // Replace AltBeacon parser with iBeacon parser
+//        beaconManager.getTransmitBeaconParsers().set(0, new IBeaconParser()); // Replace AltBeacon parser with iBeacon parser
 
+        beaconManager.getBeaconParsers().set(0,
+                new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
+        );
+
+        BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context); 
+        beaconManager.getBeaconParsers().set(0, new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24") ); 
+        beaconManager.setForegroundScanPeriod(1100);
+        beaconManager.setForegroundBetweenScanPeriod(0);
+        beaconManager.setBackgroundScanPeriod(10000);
+        beaconManager.setBackgroundBetweenScanPeriod(5*60*1000);
+        beaconManager.setBackgroundMode(true);
     }
 
     public void startRanging() {
@@ -102,6 +113,40 @@ public class BeaconScanner implements BeaconConsumer {
     public void startMonitoring() {
         assertServiceReady();
         if (monitorStarted) return;
+
+        try {
+            Region region = new Region("foo", Identifier.parse("UUID"), null, null);
+            beaconManager.startMonitoringBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            // Callback after scan cycle for every region that switched state } 
+        }
+
+
+
+            beaconManager.setMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(final Region region) {
+                // Callback after scan cycle if region entered.
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                // Callback after scan cycle if region was exited.
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int i, Region region) {
+                // Callback after scan cycle for every region that switched state
+                // MonitorNotifier.INSIDE or MonitorNotifier.OUTSIDE
+            }
+        });
+
+        try {
+            beaconManager.startMonitoringBeaconsInRegion(new Region("foo", Identifier.parse("uuid-foo"), null, null));
+        } catch (RemoteException e) {
+            // Monitoring failed
+        }
+
 
         beaconManager.setMonitorNotifier(new MonitorNotifier() {
             @Override
@@ -175,6 +220,21 @@ public class BeaconScanner implements BeaconConsumer {
         } catch (RemoteException e) {
             Log.e(TAG, "Could not start full scan", e);
         }
+
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> iBeacons, Region region) {
+                // Do stuff
+            }
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(FULL_SCAN_REGION);
+        } catch (RemoteException e) {
+            // Ranging failed
+        }
+
+
 
     }
 
@@ -255,20 +315,20 @@ public class BeaconScanner implements BeaconConsumer {
     }
 
     public void transmitBeacon(Beacon beacon, int frequency, int transmitPower) {
-        assertServiceReady();
-        try {
-            beaconManager.startTransmitting(beacon, frequency, transmitPower);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Could not transmit beacon");
-        }
+//        assertServiceReady();
+//        try {
+//            beaconManager.startTransmitting(beacon, frequency, transmitPower);
+//        } catch (RemoteException e) {
+//            Log.e(TAG, "Could not transmit beacon");
+//        }
     }
 
     public void stopTransmitting(Beacon beacon) {
-        try {
-            beaconManager.stopTransmitting(beacon);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Could not stop transmitting beacon");
-        }
+//        try {
+//            beaconManager.stopTransmitting(beacon);
+//        } catch (RemoteException e) {
+//            Log.e(TAG, "Could not stop transmitting beacon");
+//        }
     }
 
     public interface ServiceReadyCallback {

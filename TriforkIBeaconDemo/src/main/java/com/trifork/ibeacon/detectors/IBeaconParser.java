@@ -16,7 +16,7 @@ public class IBeaconParser extends BeaconParser {
         this.setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
     }
 
-    @Override
+//    @Override
     public byte[] constructAdvertismentPackage(Beacon beacon, int measuredPower) {
         byte[] advertismentPackage = new byte[25];
         advertismentPackage[0] = (byte) 0x4C;  // Apple ID, Big Endian

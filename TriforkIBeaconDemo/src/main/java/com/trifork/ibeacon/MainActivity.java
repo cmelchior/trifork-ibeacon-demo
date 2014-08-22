@@ -15,6 +15,7 @@ import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconTransmit;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
 import com.trifork.ibeacon.ui.*;
+import com.trifork.ibeacon.widgets.LocationTrackerView;
 
 import org.altbeacon.beacon.Beacon;
 
@@ -156,7 +157,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 case 1: return BeaconDataFragment.newInstance();
                 case 2: return RegionLogFragment.newInstance();
                 case 3: return NotificationFragment.newInstance();
-                case 4: return TransmitterFragment.newInstance();
+                case 4: return IndoorLocationFragment.newInstance();
+                case 5: return TransmitterFragment.newInstance();
                 default: throw new RuntimeException("Not supported: " + position);
             }
         }
@@ -174,7 +176,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 case 1: return getString(R.string.title_beacondata).toUpperCase(l);
                 case 2: return getString(R.string.title_log).toUpperCase(l);
                 case 3: return getString(R.string.title_notification).toUpperCase();
-                case 4: return getString(R.string.title_transmitter).toUpperCase();
+                case 4: return getString(R.string.title_location).toUpperCase();
+                case 5: return getString(R.string.title_transmitter).toUpperCase();
             }
             return null;
         }

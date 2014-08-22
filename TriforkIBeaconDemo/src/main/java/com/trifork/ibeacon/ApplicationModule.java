@@ -25,6 +25,7 @@ import javax.inject.Singleton;
             TransmitterFragment.class,
             NotificationFragment.class,
             RegionLogFragment.class,
+            IndoorLocationFragment.class,
             BeaconScanner.class,
             RegionHistoryCursorLoader.class
         },

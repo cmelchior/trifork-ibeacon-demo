@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.trifork.ibeacon.widgets.LocationTrackerView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_room"
+        android:id="@+id/room" />
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:id="@+id/width"
+        android:layout_below="@id/room" />
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/width"
+        android:inputType="numberDecimal"
+        android:id="@+id/height"
+        android:layout_below="@id/room" />
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="2"
+
+        android:id="@+id/gridView"
+        android:layout_below="@+id/width"
+        android:layout_alignParentStart="true" />
+
+
+</RelativeLayout>
