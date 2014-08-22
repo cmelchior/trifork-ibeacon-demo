@@ -69,7 +69,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         super.onStop();
         scanner.stopRanging();
         scanner.stopFullScan();
-        scanner.stopTransmitting(beacon);
     }
 
     @Override
@@ -104,29 +103,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         });
     }
 
-    @Subscribe
-    public void transmitBeaconRequested(final RequestBeaconTransmit event) {
-        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
-            @Override
-            public void serviceReady() {
-                scanner.transmitBeacon(event.getBeacon(), event.getAdvertiseMode(), event.getTxPowerLevel());
-                beacon = event.getBeacon();
-            }
-        });
-    }
-
-    @Subscribe
-    public void stopTransmitRequest(final RequestBeaconTransmit event) {
-        scanner.connect(new BeaconScanner.ServiceReadyCallback() {
-            @Override
-            public void serviceReady() {
-                scanner.stopTransmitting(event.getBeacon());
-            }
-        });
-    }
-
-
-
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         mViewPager.setCurrentItem(tab.getPosition());
@@ -158,7 +134,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 case 2: return RegionLogFragment.newInstance();
                 case 3: return NotificationFragment.newInstance();
                 case 4: return IndoorLocationFragment.newInstance();
-                case 5: return TransmitterFragment.newInstance();
                 default: throw new RuntimeException("Not supported: " + position);
             }
         }
@@ -177,7 +152,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 case 2: return getString(R.string.title_log).toUpperCase(l);
                 case 3: return getString(R.string.title_notification).toUpperCase();
                 case 4: return getString(R.string.title_location).toUpperCase();
-                case 5: return getString(R.string.title_transmitter).toUpperCase();
             }
             return null;
         }
