@@ -62,10 +62,27 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.setBackgroundMode(false);
+            }
+        });
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-        scanner.stopRanging();
-        scanner.stopFullScan();
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.stopRanging();
+                scanner.stopFullScan();
+                scanner.setBackgroundMode(true);
+            }
+        });
     }
 
     @Override

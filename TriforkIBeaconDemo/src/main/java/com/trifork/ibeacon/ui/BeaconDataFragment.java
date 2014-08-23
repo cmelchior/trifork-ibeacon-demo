@@ -71,6 +71,7 @@ public class BeaconDataFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        startScan();
         if (getUserVisibleHint()) {
             startScan();
         }

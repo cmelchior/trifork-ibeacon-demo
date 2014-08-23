@@ -248,6 +248,11 @@ public class BeaconController implements BeaconConsumer {
         return fullScanStarted;
     }
 
+    public void setBackgroundMode(boolean inBackground) {
+        assertServiceReady();
+        beaconManager.setBackgroundMode(inBackground);
+    }
+
     public interface ServiceReadyCallback {
         public void serviceReady();
     }
