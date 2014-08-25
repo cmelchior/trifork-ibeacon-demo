@@ -1,38 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <com.trifork.ibeacon.widgets.LocationTrackerView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:id="@+id/room"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/background_room"
-        android:id="@+id/room" />
+        android:background="@drawable/background_room" />
 
-    <EditText
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:id="@+id/width"
-        android:layout_below="@id/room" />
-
-    <EditText
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/width"
-        android:inputType="numberDecimal"
-        android:id="@+id/height"
-        android:layout_below="@id/room" />
-
-    <GridView
+    <LinearLayout
+        android:id="@+id/dimensions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numColumns="2"
+        android:layout_below="@id/room"
+        android:layout_centerHorizontal="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Width:"
+            android:textAppearance="@style/label"
+            tools:ignore="RtlSymmetry" />
+
+
+        <EditText
+            android:id="@+id/width"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/room"
+            android:inputType="numberDecimal"
+            android:paddingRight="16dp"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Height:"
+            android:textAppearance="@style/label"
+            tools:ignore="RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/height"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/width"
+            android:inputType="numberDecimal" />
+
+    </LinearLayout>
+
+
+    <GridLayout
         android:id="@+id/gridView"
-        android:layout_below="@+id/width"
-        android:layout_alignParentStart="true" />
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dimensions"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:columnCount="3"
+        android:rowCount="3">
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Beacon 1 (R):"
+            android:textAppearance="@style/label"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/beacon1Coords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="-"
+            tools:ignore="RtlSymmetry" />
+
+
+        <TextView
+            android:id="@+id/beacon1data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Beacon 2 (G):"
+            android:textAppearance="@style/label"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/beacon2Coords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="-"
+            tools:ignore="RtlSymmetry" />
+
+
+        <TextView
+            android:id="@+id/beacon2data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Beacon 3 (B):"
+            android:textAppearance="@style/label"
+            tools:ignore="RtlSymmetry" />
+
+        <TextView
+            android:id="@+id/beacon3Coords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="-"
+            tools:ignore="RtlSymmetry" />
+
+
+        <TextView
+            android:id="@+id/beacon3data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-" />
+    </GridLayout>
 </RelativeLayout>

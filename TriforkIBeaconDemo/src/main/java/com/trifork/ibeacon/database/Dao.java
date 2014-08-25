@@ -140,7 +140,7 @@ public class Dao {
                 Database.TABLE_REGIONS,
                 Database.ALL_COLUMNS,
                 Database.COLUMN_UUID +  "=? AND " + Database.COLUMN_MAJOR + "=? AND " + Database.COLUMN_MINOR + "=?",
-                new String[] { region.getId1().toString(), Integer.toString(region.getId2().toInt()), Integer.toString(region.getId3().toInt()) },
+                new String[] { region.getId1().toString(), region.getId2().toString(), region.getId3().toString() },
                 null,
                 null,
                 null,

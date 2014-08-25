@@ -2,11 +2,11 @@ package com.trifork.ibeacon.eventbus;
 
 import org.altbeacon.beacon.Region;
 
-public class RequestBeaconScanEvent implements OttoEvent {
+public class StopScanEvent implements OttoEvent {
 
     private Region region;
 
-    public RequestBeaconScanEvent(Region region) {
+    public StopScanEvent(Region region) {
         this.region = region;
     }
 

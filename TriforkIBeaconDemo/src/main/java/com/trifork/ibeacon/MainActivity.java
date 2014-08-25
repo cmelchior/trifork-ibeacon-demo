@@ -13,9 +13,9 @@ import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.detectors.BeaconController;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopScanEvent;
 import com.trifork.ibeacon.ui.*;
-
-import org.altbeacon.beacon.Beacon;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -43,6 +43,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(5);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -59,17 +60,13 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                             .setTabListener(this)
             );
         }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
-            @Override
-            public void serviceReady() {
-                scanner.setBackgroundMode(false);
-            }
-        });
+        bus.post(new RequestFullScanEvent()); // Needed here because fragments in a pager adapter have horrible lifecycle callbacks
     }
 
     @Override
@@ -78,8 +75,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         scanner.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.stopRanging();
-                scanner.stopFullScan();
                 scanner.setBackgroundMode(true);
             }
         });
@@ -93,26 +88,44 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
     @Subscribe
     public void fullScanRequested(RequestFullScanEvent event) {
-        if (scanner.isFullScanning()) return;
         scanner.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.stopMonitoring();
-                scanner.stopRanging();
                 scanner.startFullScan();
             }
         });
     }
 
     @Subscribe
-    public void beaconScanRequested(RequestBeaconScanEvent event) {
-        if (scanner.isRangingSingleBeacon()) return;
+    public void beaconScanRequested(final RequestBeaconScanEvent event) {
+        if (event.getRegion() == null) return;
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.startRanging(event.getRegion());
+                scanner.startMonitoring(event.getRegion());
+            }
+        });
+    }
+
+    @Subscribe
+    public void stopScanRequested(final StopScanEvent event) {
+        scanner.connect(new BeaconController.ServiceReadyCallback() {
+            @Override
+            public void serviceReady() {
+                scanner.stopRanging(event.getRegion());
+                scanner.stopMonitoring(event.getRegion());
+            }
+        });
+
+    }
+
+    @Subscribe
+    public void stopFullScanRequested(final StopFullScanEvent event) {
         scanner.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
                 scanner.stopFullScan();
-                scanner.startRanging();
-                scanner.startMonitoring();
             }
         });
     }
@@ -147,7 +160,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 case 1: return BeaconDataFragment.newInstance();
                 case 2: return RegionLogFragment.newInstance();
                 case 3: return NotificationFragment.newInstance();
-                case 4: return IndoorLocationFragment.newInstance();
+                case 4: return LocationFragment.newInstance();
                 default: throw new RuntimeException("Not supported: " + position);
             }
         }

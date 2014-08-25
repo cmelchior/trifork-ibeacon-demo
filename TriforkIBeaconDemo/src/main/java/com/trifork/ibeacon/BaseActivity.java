@@ -10,10 +10,14 @@ public class BaseActivity extends FragmentActivity {
 
     protected @Inject Bus bus;
 
+    public BaseActivity() {
+        super();
+        BaseApplication.inject(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseApplication.inject(this);
         bus.register(this);
     }
 

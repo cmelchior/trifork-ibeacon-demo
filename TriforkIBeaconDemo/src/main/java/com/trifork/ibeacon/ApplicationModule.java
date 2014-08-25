@@ -23,7 +23,7 @@ import javax.inject.Singleton;
             RangingFragment.class,
             NotificationFragment.class,
             RegionLogFragment.class,
-            IndoorLocationFragment.class,
+            LocationFragment.class,
             com.trifork.ibeacon.detectors.BeaconController.class,
             RegionHistoryCursorLoader.class
         },

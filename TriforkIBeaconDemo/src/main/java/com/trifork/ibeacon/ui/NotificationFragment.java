@@ -15,7 +15,10 @@ import android.widget.Switch;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
-import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
+import com.trifork.ibeacon.eventbus.RangeScanCompleteEvent;
+import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
+import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopScanEvent;
 import com.trifork.ibeacon.util.Utils;
 
 import java.util.ArrayList;
@@ -73,6 +76,18 @@ public class NotificationFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isResumed()) {
+            startScan();
+        }
+    }
+
+    private void startScan() {
+        bus.post(new RequestBeaconScanEvent(persistentState.getSelectedRegion()));
+    }
+
     private void toggleNotification(Utils.Proximity proximity, boolean checked) {
         if (checked) {
             notifications.add(proximity);
@@ -85,8 +100,8 @@ public class NotificationFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void beaconFound(BeaconScanCompleteEvent event) {
-        Utils.Proximity proximity = Utils.proximityFromDistance(event.getBeacon().getDistance());
+    public void beaconFound(RangeScanCompleteEvent event) {
+        Utils.Proximity proximity = Utils.proximityFromDistance(event.getBeacons().get(0).getDistance());
         if (proximity != lastProximity) {
             if (notifications.contains(proximity)) {
                 showNotification(proximity);

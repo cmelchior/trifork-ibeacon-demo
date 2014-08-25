@@ -14,10 +14,14 @@ public class BaseFragment extends Fragment {
     protected @Inject Bus bus;
     protected @Inject PersistentState persistentState;
 
+    public BaseFragment() {
+        super();
+        BaseApplication.inject(this);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseApplication.inject(this);
         bus.register(this);
     }
 

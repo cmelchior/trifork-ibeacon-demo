@@ -13,7 +13,7 @@ import com.squareup.otto.Bus;
 import com.trifork.ibeacon.BaseApplication;
 import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.database.RegionHistoryEntry;
-import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
+import com.trifork.ibeacon.eventbus.RangeScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.FullScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.OttoEvent;
 import com.trifork.ibeacon.util.PersistentState;
@@ -37,14 +37,10 @@ public class BeaconController implements BeaconConsumer {
 
     @Inject Context context;
     @Inject Bus bus;
-    @Inject PersistentState persistentState;
     @Inject Dao dao;
 
     private final Handler mainThread = new Handler(Looper.getMainLooper());
     private final BeaconManager beaconManager;
-    private boolean rangingStarted = false;
-    private boolean monitorStarted = false;
-    private boolean fullScanStarted = false;
     private boolean serviceReady = false;
 
     private RegionHistoryEntry currentRegion;
@@ -56,47 +52,54 @@ public class BeaconController implements BeaconConsumer {
         beaconManager.getBeaconParsers().set(0, new IBeaconParser()); // Replace AltBeacon parser with iBeacon parser
     }
 
-    public void startRanging() {
+    public void startRanging(Region region) {
         assertServiceReady();
-        if (fullScanStarted) throw new RuntimeException("Full scan in progress");
-        if (rangingStarted) return;
+
+        if (beaconManager.getRangedRegions().contains(region)) return; // Ignore if already ranging that region
+        for (Region r : beaconManager.getRangedRegions()) {
+            stopRanging(r);
+        }
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> iBeacons, Region region) {
-                if (iBeacons.size() == 1) {
-                    Beacon beacon = iBeacons.iterator().next();
-                    Log.d(TAG, "Discovered beacon: " + beacon);
-                    postOnMainThread(new BeaconScanCompleteEvent(Calendar.getInstance(), beacon));
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    postOnMainThread(new RangeScanCompleteEvent(Calendar.getInstance(), beacons));
                 }
             }
         });
 
         try {
-            Region selectedRegion = persistentState.getSelectedRegion();
-            if (selectedRegion == null) return;
-            beaconManager.startRangingBeaconsInRegion(persistentState.getSelectedRegion());
-            rangingStarted = true;
-            Log.i(TAG, "Ranging started");
+            if (region != null) {
+                beaconManager.startRangingBeaconsInRegion(region);
+                Log.i(TAG, "Ranging started");
+            }
         } catch (RemoteException e) {
             Log.e(TAG, "Could not start ranging", e);
         }
     }
 
-    public void stopRanging() {
-        if (!rangingStarted) return;
+    public void stopRanging(Region region) {
         try {
-            beaconManager.stopRangingBeaconsInRegion(persistentState.getSelectedRegion());
-            rangingStarted = false;
+            beaconManager.stopRangingBeaconsInRegion(region);
             Log.d(TAG, "Ranging stopped");
         } catch (RemoteException e) {
             Log.e(TAG, "Could not stop ranging", e);
         }
     }
 
-    public void startMonitoring() {
+    public void startMonitoring(Region region) {
         assertServiceReady();
-        if (monitorStarted) return;
+
+        // For demo purposes we only accept Regions that point to a specific beacon
+        if (region.getId1() == null || region.getId2() == null || region.getId3() == null) {
+            return;
+        }
+
+        if (beaconManager.getMonitoredRegions().contains(region)) return;
+        for (Region r : beaconManager.getMonitoredRegions()) {
+            stopMonitoring(r);
+        }
 
         beaconManager.setMonitorNotifier(new MonitorNotifier() {
             @Override
@@ -130,21 +133,16 @@ public class BeaconController implements BeaconConsumer {
         });
 
         try {
-            Region selectedRegion = persistentState.getSelectedRegion();
-            if (selectedRegion == null) return;
-            beaconManager.startMonitoringBeaconsInRegion(selectedRegion);
-            monitorStarted = true;
+            beaconManager.startMonitoringBeaconsInRegion(region);
             Log.i(TAG, "Monitoring started");
         } catch (RemoteException e) {
             Log.e(TAG, "Could not start ranging", e);
         }
     }
 
-    public void stopMonitoring() {
-        if (!monitorStarted) return;
+    public void stopMonitoring(Region region) {
         try {
-            beaconManager.stopMonitoringBeaconsInRegion(persistentState.getSelectedRegion());
-            monitorStarted = false;
+            beaconManager.stopMonitoringBeaconsInRegion(region);
             Log.d(TAG, "Monitoring stopped");
         } catch (RemoteException e) {
             Log.e(TAG, "Could not stop monitoring", e);
@@ -153,8 +151,11 @@ public class BeaconController implements BeaconConsumer {
 
     public void startFullScan() {
         assertServiceReady();
-        if (rangingStarted) throw new RuntimeException("Ranging scan in progress");
-        if (fullScanStarted) return;
+
+        if (beaconManager.getRangedRegions().contains(FULL_SCAN_REGION)) return;
+        for (Region r : beaconManager.getRangedRegions()) {
+            stopRanging(r);
+        }
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
@@ -165,7 +166,6 @@ public class BeaconController implements BeaconConsumer {
 
         try {
             beaconManager.startRangingBeaconsInRegion(FULL_SCAN_REGION);
-            fullScanStarted = true;
             Log.i(TAG, "Full scan started");
         } catch (RemoteException e) {
             Log.e(TAG, "Could not start full scan", e);
@@ -177,14 +177,7 @@ public class BeaconController implements BeaconConsumer {
     }
 
     public void stopFullScan() {
-        if (!fullScanStarted) return;
-        try {
-            beaconManager.stopRangingBeaconsInRegion(FULL_SCAN_REGION);
-            fullScanStarted = false;
-            Log.d(TAG, "Full scan stopped");
-        } catch (RemoteException e) {
-            Log.e(TAG, "Could not stop full scan", e);
-        }
+        stopRanging(FULL_SCAN_REGION);
     }
 
     public void connect(ServiceReadyCallback callback) {
@@ -234,18 +227,6 @@ public class BeaconController implements BeaconConsumer {
                 bus.post(event);
             }
         });
-    }
-
-    public boolean isRangingSingleBeacon() {
-        return rangingStarted;
-    }
-
-    public boolean isMonitoringRegion() {
-        return monitorStarted;
-    }
-
-    public boolean isFullScanning() {
-        return fullScanStarted;
     }
 
     public void setBackgroundMode(boolean inBackground) {

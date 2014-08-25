@@ -11,9 +11,11 @@ import com.echo.holographlibrary.*;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
-import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
+import com.trifork.ibeacon.eventbus.RangeScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
+import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopScanEvent;
 import com.trifork.ibeacon.util.*;
 import com.trifork.ibeacon.util.Utils;
 
@@ -69,15 +71,6 @@ public class BeaconDataFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        startScan();
-        if (getUserVisibleHint()) {
-            startScan();
-        }
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isResumed()) {
@@ -86,13 +79,12 @@ public class BeaconDataFragment extends BaseFragment {
     }
 
     private void startScan() {
-        bus.post(new RequestBeaconScanEvent());
+        bus.post(new RequestBeaconScanEvent(persistentState.getSelectedRegion()));
     }
 
-
     @Subscribe
-    public void beaconFound(BeaconScanCompleteEvent event) {
-        Beacon beacon = event.getBeacon();
+    public void beaconFound(RangeScanCompleteEvent event) {
+        Beacon beacon = event.getBeacons().get(0);
         Calendar time = event.getTimestamp();
         readings.add(beacon.getRssi());
         distances.add(Utils.proximityFromDistance(beacon.getDistance()));

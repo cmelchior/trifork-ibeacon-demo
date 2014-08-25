@@ -17,6 +17,8 @@ import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.database.RegionHistoryCursorLoader;
 import com.trifork.ibeacon.database.RegionHistoryEntry;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
+import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopScanEvent;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -57,14 +59,6 @@ public class RegionLogFragment extends BaseFragment implements LoaderManager.Loa
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (getUserVisibleHint()) {
-            startScan();
-        }
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isResumed()) {
@@ -73,7 +67,7 @@ public class RegionLogFragment extends BaseFragment implements LoaderManager.Loa
     }
 
     private void startScan() {
-        bus.post(new RequestBeaconScanEvent());
+        bus.post(new RequestBeaconScanEvent(persistentState.getSelectedRegion()));
     }
 
     @Override

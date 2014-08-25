@@ -10,9 +10,12 @@ import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
+import com.trifork.ibeacon.detectors.BeaconController;
 import com.trifork.ibeacon.eventbus.FullScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.NewBeaconSelectedEvent;
 import com.trifork.ibeacon.eventbus.RequestFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopFullScanEvent;
+import com.trifork.ibeacon.eventbus.StopScanEvent;
 import com.trifork.ibeacon.util.PersistentState;
 import com.trifork.ibeacon.util.Utils;
 
@@ -40,6 +43,7 @@ public class ScanFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        selectedBeacon = persistentState.getSelectedRegion();
     }
 
     @Override
@@ -71,20 +75,17 @@ public class ScanFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getUserVisibleHint()) {
-            startScan();
-        }
-    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isResumed() && isVisibleToUser) {
+        if (isVisibleToUser && isResumed()) {
             startScan();
         }
+    }
+
+    private void startScan() {
+        bus.post(new RequestFullScanEvent());
     }
 
     @Override
@@ -94,11 +95,6 @@ public class ScanFragment extends BaseFragment {
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         item.setActionView(R.layout.actionbar_progress);
         item.expandActionView();
-    }
-
-    private void startScan() {
-        selectedBeacon = persistentState.getSelectedRegion();
-        bus.post(new RequestFullScanEvent());
     }
 
     @Subscribe

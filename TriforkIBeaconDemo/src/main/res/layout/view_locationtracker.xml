@@ -7,28 +7,25 @@
     android:layout_centerInParent="true"
     android:background="@drawable/background_room">
 
-    <View
+    <com.trifork.ibeacon.widgets.BeaconView
         android:id="@+id/beacon1"
-        android:padding="2dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="30dp"
+        android:padding="10dp"
         android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/background_beacon1" />
+        android:layout_height="20dp" />
 
-    <View
+    <com.trifork.ibeacon.widgets.BeaconView
         android:id="@+id/beacon2"
-        android:padding="2dp"
+        android:padding="10dp"
         android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/background_beacon2" />
+        android:layout_height="20dp" />
 
-    <View
+    <com.trifork.ibeacon.widgets.BeaconView
         android:id="@+id/beacon3"
-        android:padding="2dp"
+        android:padding="10dp"
         android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/background_beacon3" />
+        android:layout_height="20dp" />
 
 
 </RelativeLayout>

@@ -13,7 +13,7 @@ import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import com.trifork.ibeacon.BaseFragment;
 import com.trifork.ibeacon.R;
-import com.trifork.ibeacon.eventbus.BeaconScanCompleteEvent;
+import com.trifork.ibeacon.eventbus.RangeScanCompleteEvent;
 import com.trifork.ibeacon.eventbus.RequestBeaconScanEvent;
 import com.trifork.ibeacon.util.Utils;
 
@@ -87,8 +87,8 @@ public class RangingFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onBeaconDataReceived(BeaconScanCompleteEvent event) {
-        Beacon beacon = event.getBeacon();
+    public void onBeaconDataReceived(RangeScanCompleteEvent event) {
+        Beacon beacon = event.getBeacons().get(0);
         double distanceM = beacon.getDistance();
         Utils.Proximity proximity = Utils.proximityFromDistance(beacon.getDistance());
 
@@ -97,8 +97,8 @@ public class RangingFragment extends BaseFragment {
 
         // Calculate new pause based on current RSSI
         // Convert to positive numbers to not make my head hurt.
-        float txPower = -event.getBeacon().getTxPower();
-        float rssi = -event.getBeacon().getRssi();
+        float txPower = -beacon.getTxPower();
+        float rssi = -beacon.getRssi();
         if (rssi <= txPower) {
             pause = MIN_PAUSE_MS;
         } else if (rssi >= 100) {
@@ -110,7 +110,7 @@ public class RangingFragment extends BaseFragment {
     }
 
     private void startScan() {
-        bus.post(new RequestBeaconScanEvent());
+        bus.post(new RequestBeaconScanEvent(persistentState.getSelectedRegion()));
         if (persistentState.getSelectedRegion() != null) {
             handler.post(toneRunner);
         }
