@@ -70,17 +70,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        controller.connect(new BeaconController.ServiceReadyCallback() {
-            @Override
-            public void serviceReady() {
-                controller.setBackgroundMode(true);
-            }
-        });
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         dao.close();
