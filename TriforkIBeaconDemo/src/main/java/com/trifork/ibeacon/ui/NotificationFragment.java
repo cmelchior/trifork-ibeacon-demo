@@ -28,6 +28,8 @@ import butterknife.InjectView;
 
 public class NotificationFragment extends BaseFragment {
 
+    private static final int SHARED_NOTIFICATION_ID = 0x01;
+
     @InjectView(R.id.immediateText) EditText immediateText;
     @InjectView(R.id.immediateSwitch) Switch immediateSwitch;
     @InjectView(R.id.nearText) EditText nearText;
@@ -119,7 +121,7 @@ public class NotificationFragment extends BaseFragment {
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(proximity.hashCode(), notification);
+        notificationManager.notify(SHARED_NOTIFICATION_ID, notification);
     }
 
     private CharSequence getNotificationText(Utils.Proximity proximity) {
