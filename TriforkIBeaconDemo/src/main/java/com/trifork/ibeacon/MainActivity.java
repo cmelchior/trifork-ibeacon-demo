@@ -24,7 +24,7 @@ import java.util.Locale;
 public class MainActivity extends BaseActivity implements ActionBar.TabListener {
 
     @Inject Dao dao;
-    @Inject BeaconController scanner;
+    @Inject BeaconController controller;
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -72,10 +72,10 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Override
     public void onStop() {
         super.onStop();
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
+        controller.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.setBackgroundMode(true);
+                controller.setBackgroundMode(true);
             }
         });
     }
@@ -88,10 +88,10 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
     @Subscribe
     public void fullScanRequested(RequestFullScanEvent event) {
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
+        controller.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.startFullScan();
+                controller.startFullScan();
             }
         });
     }
@@ -99,22 +99,22 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     @Subscribe
     public void beaconScanRequested(final RequestBeaconScanEvent event) {
         if (event.getRegion() == null) return;
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
+        controller.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.startRanging(event.getRegion());
-                scanner.startMonitoring(event.getRegion());
+                controller.startRanging(event.getRegion());
+                controller.startMonitoring(event.getRegion());
             }
         });
     }
 
     @Subscribe
     public void stopScanRequested(final StopScanEvent event) {
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
+        controller.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.stopRanging(event.getRegion());
-                scanner.stopMonitoring(event.getRegion());
+                controller.stopRanging(event.getRegion());
+                controller.stopMonitoring(event.getRegion());
             }
         });
 
@@ -122,10 +122,10 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
     @Subscribe
     public void stopFullScanRequested(final StopFullScanEvent event) {
-        scanner.connect(new BeaconController.ServiceReadyCallback() {
+        controller.connect(new BeaconController.ServiceReadyCallback() {
             @Override
             public void serviceReady() {
-                scanner.stopFullScan();
+                controller.stopFullScan();
             }
         });
     }

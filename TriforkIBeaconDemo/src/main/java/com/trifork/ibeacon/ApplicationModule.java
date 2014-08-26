@@ -6,6 +6,7 @@ import com.squareup.otto.ThreadEnforcer;
 import com.trifork.ibeacon.database.Dao;
 import com.trifork.ibeacon.database.Database;
 import com.trifork.ibeacon.database.RegionHistoryCursorLoader;
+import com.trifork.ibeacon.detectors.BeaconController;
 import com.trifork.ibeacon.ui.*;
 import com.trifork.ibeacon.util.PersistentState;
 import dagger.Module;
@@ -15,6 +16,7 @@ import javax.inject.Singleton;
 
 //This annotation must list all classes that wish to inject
 @Module(injects = {
+            BootBroadcastReceiver.class,
             BaseActivity.class,
             MainActivity.class,
             BaseFragment.class,
@@ -59,5 +61,11 @@ public class ApplicationModule {
     @Singleton
     PersistentState providesPersistentState(Context context) {
         return new PersistentState(context);
+    }
+
+    @Provides
+    @Singleton
+    BeaconController providesBeaconController() {
+        return new BeaconController();
     }
 }

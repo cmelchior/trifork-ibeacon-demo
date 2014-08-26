@@ -16,7 +16,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     public static final String TAG = BootBroadcastReceiver.class.getName();
 
     @Inject PersistentState persistentState;
-    @Inject BeaconController detector;
+    @Inject BeaconController controller;
 
     public BootBroadcastReceiver() {
         BaseApplication.inject(this);
@@ -24,9 +24,14 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Region region = persistentState.getSelectedRegion();
+        final Region region = persistentState.getSelectedRegion();
         if (region != null) {
-            detector.startMonitoring(region);
+            controller.connect(new BeaconController.ServiceReadyCallback() {
+                @Override
+                public void serviceReady() {
+                    controller.startMonitoring(region);
+                }
+            });
         }
     }
 }

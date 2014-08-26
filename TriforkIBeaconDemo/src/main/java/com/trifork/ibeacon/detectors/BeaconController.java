@@ -50,6 +50,7 @@ public class BeaconController implements BeaconConsumer {
         BaseApplication.inject(this);
         beaconManager = BeaconManager.getInstanceForApplication(context);
         beaconManager.getBeaconParsers().set(0, new IBeaconParser()); // Replace AltBeacon parser with iBeacon parser
+        dao.open();
     }
 
     public void startRanging(Region region) {
