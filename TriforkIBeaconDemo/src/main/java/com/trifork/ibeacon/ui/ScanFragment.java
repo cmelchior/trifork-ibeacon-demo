@@ -22,6 +22,11 @@ import com.trifork.ibeacon.util.Utils;
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.Region;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class ScanFragment extends BaseFragment {
@@ -100,6 +105,17 @@ public class ScanFragment extends BaseFragment {
     @Subscribe
     public void scanComplete(FullScanCompleteEvent event) {
         adapter.clear();
+
+        List<Beacon> beacons = event.getBeacons();
+        Collections.sort(beacons, new Comparator<Beacon>() {
+            @Override
+            public int compare(Beacon lhs, Beacon rhs) {
+                if (lhs == null && rhs == null) return 0;
+                if (lhs != null && rhs == null) return -1;
+                if (lhs == null && rhs != null) return 1;
+                return lhs.toString().compareTo(rhs.toString());
+            }
+        });
         adapter.addAll(event.getBeacons());
     }
 
